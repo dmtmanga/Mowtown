@@ -8,89 +8,102 @@ public class PlayerController : MonoBehaviour {
 	public GameObject sword;
 	public GameObject myFertilizer;
 	public GameObject fertPrefab;
+
+    private Rigidbody2D _r;
+    private Dictionary<string, SoundBank> _soundbanks;
+
 	public float attackCooldown;
-	private Dictionary<string, SoundBank> _soundbanks;
 	public string attackButton;
-	private Rigidbody2D _r;
-	private bool _isAttacking = false;
 	private float _attackTime;
-	private Animator _animator;
+    private bool _isAttacking = false;
+	
+    private Animator _animator;
 	private bool _facingLeft;
 	private bool _carryingFert;
 	
-	// Use this for initialization
-	public void Start () {
-		_soundbanks = new Dictionary<string, SoundBank> ();
-		SoundBank[] soundbanks = GetComponents<SoundBank> ();
 
-		foreach(SoundBank soundbank in soundbanks)
-		{
-			_soundbanks.Add (soundbank.sample, soundbank);
-		}
+    public void Awake(){
+        
+
+        _r = GetComponent<Rigidbody2D>();
+        _animator = GetComponent<Animator>();
+    }
+	
+	public void Start () {
+        _soundbanks = new Dictionary<string, SoundBank>();
+        SoundBank[] soundbanks = GetComponents<SoundBank>();
+        foreach (SoundBank soundbank in soundbanks)
+            _soundbanks.Add(soundbank.sample, soundbank);
+
 		_facingLeft = true;
 		_carryingFert = false;
-		_animator = GetComponent<Animator> ();
 		_attackTime = attackCooldown;
-		_r = GetComponent<Rigidbody2D> ();
 		sword.transform.position = new Vector3 (sword.transform.parent.transform.position.x, 
 		                                        sword.transform.parent.transform.position.y - 0.32f);
 	}
 	
-	// Update is called once per frame
+	
 	void Update () {
 		Attack ();
-		
-		if (Mathf.Abs(_r.velocity.x) > Mathf.Abs(_r.velocity.y)) {
-			if( _r.velocity.x > 0)
-			{
-				sword.transform.position = new Vector3 (sword.transform.parent.transform.position.x + 0.32f, sword.transform.parent.transform.position.y);
-				_animator.SetBool ("right", true);
-				_animator.SetBool ("left", false);
-				_animator.SetBool ("up", false);
-				_animator.SetBool ("down", false);
-
-				if(_facingLeft)
-				{
-					Flip ();
-				}
-			}
-			else if (_r.velocity.x < 0)
-			{
-				sword.transform.position = new Vector3 (sword.transform.parent.transform.position.x - 0.32f, 
-				                                        sword.transform.parent.transform.position.y);
-				_animator.SetBool("left", true);
-				_animator.SetBool("right", false);
-				_animator.SetBool ("up", false);
-				_animator.SetBool ("down", false);
-				if(!_facingLeft)
-				{
-					Flip ();
-				}
-			}
-		}
-		else if (Mathf.Abs(_r.velocity.x) < Mathf.Abs(_r.velocity.y)) {
-			if( _r.velocity.y > 0)
-			{
-				sword.transform.position = new Vector3 (sword.transform.parent.transform.position.x, 
-				                                        sword.transform.parent.transform.position.y + 0.32f);
-				_animator.SetBool("up", true);
-				_animator.SetBool("down", false);
-				_animator.SetBool ("left", false);
-				_animator.SetBool ("right", false);
-
-			}
-			else if (_r.velocity.y < 0)
-			{
-				sword.transform.position = new Vector3 (sword.transform.parent.transform.position.x, 
-				                                        sword.transform.parent.transform.position.y - 0.32f);
-				_animator.SetBool("down", true);
-				_animator.SetBool("up", false);
-				_animator.SetBool ("left", false);
-				_animator.SetBool ("right", false);
-			}
-		} 
-		_animator.SetFloat ("speed", _r.velocity.magnitude);
+        AnimateMovement();		
 	}
+
+
+    private void AnimateMovement()
+    {
+        if (Mathf.Abs(_r.velocity.x) > Mathf.Abs(_r.velocity.y))
+        {
+            if (_r.velocity.x > 0)
+            {
+                sword.transform.position = new Vector3(sword.transform.parent.transform.position.x + 0.32f, sword.transform.parent.transform.position.y);
+                _animator.SetBool("right", true);
+                _animator.SetBool("left", false);
+                _animator.SetBool("up", false);
+                _animator.SetBool("down", false);
+
+                if (_facingLeft)
+                {
+                    Flip();
+                }
+            }
+            else if (_r.velocity.x < 0)
+            {
+                sword.transform.position = new Vector3(sword.transform.parent.transform.position.x - 0.32f,
+                                                        sword.transform.parent.transform.position.y);
+                _animator.SetBool("left", true);
+                _animator.SetBool("right", false);
+                _animator.SetBool("up", false);
+                _animator.SetBool("down", false);
+                if (!_facingLeft)
+                {
+                    Flip();
+                }
+            }
+        }
+        else if (Mathf.Abs(_r.velocity.x) < Mathf.Abs(_r.velocity.y))
+        {
+            if (_r.velocity.y > 0)
+            {
+                sword.transform.position = new Vector3(sword.transform.parent.transform.position.x,
+                                                        sword.transform.parent.transform.position.y + 0.32f);
+                _animator.SetBool("up", true);
+                _animator.SetBool("down", false);
+                _animator.SetBool("left", false);
+                _animator.SetBool("right", false);
+
+            }
+            else if (_r.velocity.y < 0)
+            {
+                sword.transform.position = new Vector3(sword.transform.parent.transform.position.x,
+                                                        sword.transform.parent.transform.position.y - 0.32f);
+                _animator.SetBool("down", true);
+                _animator.SetBool("up", false);
+                _animator.SetBool("left", false);
+                _animator.SetBool("right", false);
+            }
+        }
+        _animator.SetFloat("speed", _r.velocity.magnitude);
+    }
 
 	private void FootSteps() {
 		_soundbanks ["grassstep"].Stop ();

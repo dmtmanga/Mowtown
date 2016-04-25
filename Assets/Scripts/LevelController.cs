@@ -7,15 +7,11 @@ public class LevelController : MonoBehaviour {
 	public GameObject grassPrefab;
 	public GameObject bushPrefab;
 
-	// Use this for initialization
+
 	void Start () {
 		PrepareLevel ();
 	}
-	
-	// Update is called once per frame
-	void Update () {
 
-	}
 
 	public void PrepareLevel() {
 		Vector3 position = new Vector3 ();

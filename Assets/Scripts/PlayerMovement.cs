@@ -5,17 +5,23 @@ public class PlayerMovement : MonoBehaviour {
 
 	public float speed;	
 
-	private GameObject _GM;
+	//private GameObject _GM;
 	private Rigidbody2D _r;
+    private PlayerController _PC;
 	private Vector3 _moveVector;
 	private string _x;
 	private string _y;
 
 
-	// Use this for initialization
+    void Awake()
+    {
+        //_GM = GameObject.FindGameObjectWithTag("GameController");
+        _PC = GetComponent<PlayerController>();
+        _r = GetComponent<Rigidbody2D>();
+    }
+
+
 	void Start () {
-		_GM = GameObject.FindGameObjectWithTag ("GameController");
-		_r = GetComponent<Rigidbody2D>();
 		if (name == "P1") {
 			_x = "LeftStickX1";
 			_y = "LeftStickY1";
@@ -25,22 +31,15 @@ public class PlayerMovement : MonoBehaviour {
 		}
 	}
 	
-	// Update is called once per frame
+	
 	void FixedUpdate () {
-
-		if (_GM.GetComponent<PlayerWin> ().GameOver ()) {
-			_moveVector.x = 0;
-			_moveVector.y = 0;
-			_r.velocity = _moveVector;
-			return;
-		}
-
-		if (!GetComponent<PlayerController> ().isAttacking () ){
-			_moveVector.x = Input.GetAxis (_x) * speed;
-			_moveVector.y = Input.GetAxis (_y) * speed * -1;
+		if (!_PC.isAttacking () )
+        {
+			_moveVector.x = Input.GetAxis (_x);
+			_moveVector.y = Input.GetAxis (_y) * -1;
 			_moveVector.z = 0f;
 
-			_r.velocity = _moveVector;
+			_r.velocity = _moveVector * speed;
 		}
 	}
 }

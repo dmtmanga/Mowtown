@@ -7,7 +7,7 @@ public class CameraEffects : MonoBehaviour {
 	private float _time;
 	private float _magnitude;
 
-	// Use this for initialization
+
 	void Start () {
 		_initial = transform.position;
 	}
@@ -18,7 +18,7 @@ public class CameraEffects : MonoBehaviour {
 		_magnitude = magnitude;
 	}
 
-	// Update is called once per frame
+
 	void Update () {
 		_time -= Time.deltaTime;
 		_magnitude -= 0.01f;
