@@ -12,14 +12,14 @@ public class PlayerWin : MonoBehaviour {
 	private GameObject[] p1Yard;
 	private GameObject[] p2Yard;
 
-	// Use this for initialization
+
 	void Start () {
 		timeUntilRestart = restartTime;
 		winMessage.gameObject.SetActive(false);
 		winMessage.text = "";
 	}
 	
-	// Update is called once per frame
+
 	void Update () {
 
 		p1Yard = GameObject.FindGameObjectsWithTag ("Grass1");
